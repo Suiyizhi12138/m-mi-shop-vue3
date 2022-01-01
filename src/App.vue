@@ -1,18 +1,57 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <router-view />
 </template>
 
 <style lang="scss">
+* {
+  background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+  color: #666;
+}
+li {
+  list-style: none;
+}
+html,body {
+  font-size: 14px;
+  background-color: #fff;
+  
+}
+
+html,body{
+  //隐藏滚动条 firefox
+  scrollbar-width: none;
+  //ie
+  -ms-overflow-style: none;
+  //chrome
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
+}
+hr {
+  border-bottom: none;
+}
+//两端对齐布局
+.flex-between{
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+//flex 垂直居中
+.cloumn-center{
+  display: flex;
+  align-items: center;
+  
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #3c3c3c;
 }
 
 #nav {
