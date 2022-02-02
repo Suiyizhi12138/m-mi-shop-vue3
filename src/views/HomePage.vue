@@ -57,12 +57,7 @@ import BackTop from "@/components/common/BackTop";
 import { useStore } from 'vuex'
 
 export default {
-  created(){
-    this.$store.dispatch('getCartItems')
-    if(!this.$store.getters.userInfo){
-      this.$store.dispatch('getUserInfo')
-    }
-  },
+  
   computed: {
     totalAmount(){
       return this.$store.getters.cartTotalAmount

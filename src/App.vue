@@ -2,6 +2,14 @@
   <router-view />
 </template>
 <script>
+export default {
+  created() {
+    this.$store.dispatch("getCartItems");
+    if (!this.$store.getters.userInfo) {
+      this.$store.dispatch("getUserInfo");
+    }
+  }
+};
 </script>
 <style lang="scss">
 * {
@@ -16,13 +24,14 @@ a {
 li {
   list-style: none;
 }
-html,body {
+html,
+body {
   font-size: 14px;
   background-color: #fff;
-  
 }
 
-html,body{
+html,
+body {
   //隐藏滚动条 firefox
   scrollbar-width: none;
   //ie
@@ -31,9 +40,8 @@ html,body{
   &::-webkit-scrollbar {
     width: 0;
   }
-
 }
-.scroll-hidden{
+.scroll-hidden {
   //隐藏滚动条 firefox
   scrollbar-width: none;
   //ie
@@ -42,25 +50,24 @@ html,body{
   &::-webkit-scrollbar {
     width: 0;
   }
-
 }
 hr {
   border-bottom: none;
 }
 //两端对齐布局
-.flex-between{
+.flex-between {
   display: -webkit-flex;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 //flex 垂直 居中
-.cloumn-center{
+.cloumn-center {
   display: flex;
   align-items: center;
 }
 //水平 垂直居中
-.flex-center{
+.flex-center {
   display: flex;
   -webkit-box-flex: flex;
   justify-content: center;
@@ -68,19 +75,19 @@ hr {
 }
 
 //垂直布局
-.flex-column{
+.flex-column {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 //水平对齐
-.flex-start{
+.flex-start {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-button{
+button {
   border: none;
   cursor: pointer;
 }

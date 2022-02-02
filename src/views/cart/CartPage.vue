@@ -51,9 +51,9 @@
        <router-link to="category">继续购物</router-link>
       </div>
       <div class="btn-handler flex-column">
-        <router-link to="/check_order">
+        <a href="javascript:" @click="submitCart">
           去结算
-        </router-link>
+        </a>
       </div>
     </div>
   </div>
@@ -65,6 +65,7 @@ import FetchAPI from "@/utils/fetchApi";
 import { Toast } from "vant";
 import CommonHeader from "@/components/common/CommonHeader";
 import { useStore } from "vuex";
+import { useRouter } from 'vue-router'
 export default {
   created() {
     this.$store.dispatch("getCartItems");
@@ -73,13 +74,13 @@ export default {
   setup() {
     const state = reactive({
       //cartItems: [],//购物车项目
-      checkedItemIndexs: [], //选中的购物车项目 array[index1,index2,index3]
+      checkedItemIndexs: [], //选中的购物车项目下标 array[index1,index2,index3]
       checkedItems: [], //选中的购物车项目 array[{},{},{}]
       checkedTotalAmount: 0, //选中总件数
       checkedTotalPrice: 0 //选中总价
     });
     const store = useStore();
-
+    const router = useRouter()
     //选中购物车项目
     const checkItem = index => {
       //如果该项不在数组中则加入
@@ -155,6 +156,17 @@ export default {
         Toast.fail("购买数量不能为0");
       }
     };
+    //结算购物车
+    const submitCart = () => {
+        //判定是否选中购物车项目
+        if(state.checkedItems.length==0){
+          Toast.fail('请选择要购买的商品')
+        }else{
+          //储存购物车项目
+          store.dispatch('saveBuyItems',state.checkedItems)
+          router.push({name:"check_order"})
+        }
+    }
 
     return {
       ...toRefs(state),
@@ -162,7 +174,8 @@ export default {
       deleteItem,
       cartItems,
       incAmount,
-      decAmount
+      decAmount,
+      submitCart
     };
   },
   components: {

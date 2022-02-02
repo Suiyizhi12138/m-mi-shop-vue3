@@ -7,6 +7,7 @@ export default createStore({
     cartTotalAmount: 0,//购物车总件数
     userInfo: null,//用户个人信息
     selectedDistirct: '',//选择的地区、街道信息
+    buyItems: '',//要购买的订单项
   },
   mutations: {
     setUserLoginStatus(state, status) {
@@ -20,6 +21,9 @@ export default createStore({
     },
     setDistrict(state,district){
       state.selectedDistirct = district
+    },
+    setBuyItems(state,items){
+      state.buyItems = items
     }
   },
   actions: {
@@ -58,6 +62,11 @@ export default createStore({
     //获取地区信息
     keepSelectedDistrict({commit},district){
       commit('setDistrict',district)
+    },
+    //保存购物车项目以提交到结算订单页
+    saveBuyItems({commit},items){
+      commit('setBuyItems',items)
+      localStorage.setItem('_buy_items',JSON.stringify(items))
     }
   },
   getters: {
@@ -78,11 +87,12 @@ export default createStore({
     userInfo(state){
       return state.userInfo
     },
-    selectedDistirct(){
-      console.log(state.selectedDistirct)
+    selectedDistirct(state){
       return state.selectedDistirct
+    },
+    buyItems(state){
+      return state.buyItems
     }
-
   }
 
 })

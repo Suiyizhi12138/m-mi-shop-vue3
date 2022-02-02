@@ -28,10 +28,10 @@
       </div>
     </div>
     <div class="address-choice flex-between">
-      <div class="address-choice-left flex-wrap" @click="hrefToAddress">
+      <div class="address-choice-left flex-wrap" @click="showAddressChoice">
         <div class="user-info">
-          <span >历飞雨</span>
-          <span>150****6440</span>
+          <span >{{userInfo?userInfo.personal_info.nick_name:''}}</span>
+          <span>{{userInfo?userInfo.phone: ''}}</span>
         </div>
         <div class="user-address">
           广东省 广州市 白云区 均和大道 大朗站
@@ -85,37 +85,62 @@
         <div class="footer-btn flex-column" @click="submitOrder()">去付款</div>
       </div>
     </footer>
+    <van-popup position="left" v-model:show="isShowAddressChoice" :style="{ width: '100%',height: '100%'}">
+      <address-choice @closeAddressChoice="handleCloseAddressChoice" @selectOrderAddress='getAddressFromChild'></address-choice>
+    </van-popup>
+    
   </div>
 </template>
 
 <script>
 import AddressHeader from '@/components/common/AddressHeader'
-import { reactive,toRefs } from 'vue'
+import  AddressChoice  from './components/AddressChoice'
+import { reactive,toRefs,computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 export default {
   components: {
-    AddressHeader
+    AddressHeader,
+    AddressChoice
   },
   setup(){
     const state = reactive({
       isShowTips: true,//是否显示提示
+      isShowAddressChoice: false,//是否显示选择地址框
+      address: '',//收货地址
     })
     const router  = useRouter()
+    const store = useStore()
     const closeTips = () => {
       state.isShowTips = false
     }
-    const hrefToAddress = () => {
-      router.push({name: 'user_address'})
+    const showAddressChoice = () => {
+      state.isShowAddressChoice = true
     }
     const submitOrder = () => {
-      console.log('submit order')
+      console.log(store.getters.buyItems)
+    }
+    const userInfo = computed(()=>{
+      if(store.getters.userInfo){
+        return store.getters.userInfo
+      }
+    })
+    //关闭地址选择框
+    const handleCloseAddressChoice = () => {
+      state.isShowAddressChoice = false;
+    }
+    //从子组件获取选择的地址
+    const getAddressFromChild = (address) => {
+      state.address = address
     }
     return {
       ...toRefs(state),
       closeTips,
-      hrefToAddress,
-      submitOrder
-
+      showAddressChoice,
+      submitOrder,
+      userInfo,
+      handleCloseAddressChoice,
+      getAddressFromChild
     }
   }
 }
