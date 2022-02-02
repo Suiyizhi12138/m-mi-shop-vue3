@@ -1,7 +1,8 @@
 <template>
   <router-view />
 </template>
-
+<script>
+</script>
 <style lang="scss">
 * {
   background-repeat: no-repeat;
@@ -32,6 +33,17 @@ html,body{
   }
 
 }
+.scroll-hidden{
+  //隐藏滚动条 firefox
+  scrollbar-width: none;
+  //ie
+  -ms-overflow-style: none;
+  //chrome
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
+}
 hr {
   border-bottom: none;
 }
@@ -42,11 +54,35 @@ hr {
   justify-content: space-between;
   align-items: center;
 }
-//flex 垂直居中
+//flex 垂直 居中
 .cloumn-center{
   display: flex;
   align-items: center;
-  
+}
+//水平 垂直居中
+.flex-center{
+  display: flex;
+  -webkit-box-flex: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+//垂直布局
+.flex-column{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+//水平对齐
+.flex-start{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+button{
+  border: none;
+  cursor: pointer;
 }
 
 #app {

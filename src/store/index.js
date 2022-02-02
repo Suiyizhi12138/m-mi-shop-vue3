@@ -1,12 +1,88 @@
 import { createStore } from 'vuex'
-
+import FetchAPI from '@/utils/fetchApi'
 export default createStore({
   state: {
+    userLoginStatus: 0,
+    cartItems: [],
+    cartTotalAmount: 0,//购物车总件数
+    userInfo: null,//用户个人信息
+    selectedDistirct: '',//选择的地区、街道信息
   },
   mutations: {
+    setUserLoginStatus(state, status) {
+      state.userLoginStatus = status
+    },
+    setCartItems(state, data) {
+      state.cartItems = data
+    },
+    setUserInfo(state,info){
+      state.userInfo = info
+    },
+    setDistrict(state,district){
+      state.selectedDistirct = district
+    }
   },
   actions: {
+    checkUserLoginstatus({ commit }) {
+      if (localStorage.getItem('_user_token')) {
+        commit('setUserLoginStatus', 2)
+      }
+    },
+    //获取购物车信息
+    getCartItems({ commit }) {
+      //如果本地信息存在直接获取
+      if (localStorage.getItem("_full_cart")) {
+        commit('setCartItems', JSON.parse(localStorage.getItem('_full_cart')))
+      } else {
+        //否则线上获取
+        FetchAPI.getCartItems()
+          .then((res) => {
+            commit('setCartItems', res.data)
+          })
+          .catch(e => {
+            console.log('获取购物车信息失败' + e)
+          })
+      }
+
+    },
+    //获取用户信息
+    getUserInfo({commit}){
+      FetchAPI.getUserInfo()
+      .then((res)=>{
+        commit('setUserInfo',res.data)
+      })
+      .catch((e)=>{
+        console.log(e)
+      })
+    },
+    //获取地区信息
+    keepSelectedDistrict({commit},district){
+      commit('setDistrict',district)
+    }
   },
-  modules: {
+  getters: {
+    userLoginStatus(state) {
+      return state.userLoginStatus
+    },
+    cartItems(state) {
+      return state.cartItems
+    },
+    cartTotalAmount(state){
+      //计算总件数
+      let totalAmount = 0
+      state.cartItems.forEach((item)=>{
+        totalAmount += item.amount
+      })
+      return totalAmount
+    },
+    userInfo(state){
+      return state.userInfo
+    },
+    selectedDistirct(){
+      console.log(state.selectedDistirct)
+      return state.selectedDistirct
+    }
+
   }
+
 })

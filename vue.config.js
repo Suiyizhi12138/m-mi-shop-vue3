@@ -17,7 +17,7 @@ module.exports = {
       '/v3': {
         target: 'https://restapi.amap.com',
         changeOrgin: true,
-        secure: false
+        secure: true
       }
     }
 

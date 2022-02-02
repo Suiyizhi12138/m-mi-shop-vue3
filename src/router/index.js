@@ -1,6 +1,12 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory,useRouter } from 'vue-router'
 
-
+const testLoginAndNext = (nextFunc) => {
+  if(localStorage.getItem('_user_token')){
+    nextFunc()
+  }else{
+    nextFunc({name: 'user_login'})
+  }
+}
 const routes = [
   {
     path: '/',
@@ -37,9 +43,12 @@ const routes = [
       {
         path:'user',
         name:'user',
-        component: () => import('@/views/UserPage'),
+        component: () => import('@/views/user/UserHome'),
         meta: {
           title: '用户中心'
+        },
+        beforeEnter(to,from,next){
+          testLoginAndNext(next)
         }
 
       }
@@ -59,9 +68,18 @@ const routes = [
   {
     path: '/cart',
     name: 'cart',
-    component: () => import('@/views/CartPage'),
+    component: () => import('@/views/cart/CartPage'),
     meta: {
       title: '购物车'
+    },
+    beforeEnter(to,from,next){
+      if(localStorage.getItem('_user_token')){
+        next()
+        
+      }else{
+        next({name: 'user_login'})
+      }
+      
     }
   },
   {
@@ -80,10 +98,10 @@ const routes = [
     meta: {
       title: '商品详情页'
     }
-  }
+  },
   //用户登录页
   {
-    path: 'user/login',
+    path: '/user/login',
     name: 'user_login',
     component: () => import('@/views/user/UserLogin.vue'),
     meta: {
@@ -91,11 +109,66 @@ const routes = [
     }
   },
   {
+    //用户设置页
+    path: '/user/set',
+    name: 'user_set',
+    component: () => import('@/views/user/UserSet'),
+    meta: {
+      title: '个人中心'
+    },
+    beforeEnter(to,from,next){
+      testLoginAndNext(next)
+    }
+  },
+  {
+    //用户地址管理
+    path: '/user/address',
+    name: 'user_address',
+    component: () => import('@/views/user/UserAddress'),
+    meta: {
+      title: '收货地址管理'
+    },
+
+  },
+  {
+    //添加新地址
+    path: '/user/address/new',
+    name: 'new_address',
+    component: () => import('@/views/user/UserAddressNew'),
+    meta: {
+      title: '添加新的收货地址'
+    }
+  },
+  {
     path: '/user/register',
     name: 'user_register',
-    compoennt: () => import('@/views/user/UserRegister.vue')
+    component: () => import('@/views/user/UserRegister'),
+    meta: {
+      title: '注册'
+    }
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: () => import('@/views/order/OrderPage'),
+    meta: {
+      title: '我的订单'
+    }
+  },
+  {
+    path: '/check_order',
+    name: 'check_order',
+    component: () => import('@/views/order/CheckOrder'),
+    meta: {
+      title: '确认订单'
+    },
+    beforeEnter(to,from,next){
+      testLoginAndNext(next)
+    }
+
 
   }
+  
   
   
 ]

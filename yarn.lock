@@ -1155,6 +1155,11 @@
     anymatch "^3.0.0"
     source-map "^0.6.0"
 
+"@vant/area-data@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@vant/area-data/-/area-data-1.2.2.tgz#1b0559ee93661663d10d3766bcde15ab35ff3fcd"
+  integrity sha512-efv7Yl/OTHjyy0irhJJPtgZb5mJZmroEtVOa8vkGRNTLY93+NgEcVuIBaC35hYCMsTrPHDQRvQGnI9Hyhtto0Q==
+
 "@vant/icons@^1.7.1":
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/@vant/icons/-/icons-1.7.3.tgz#e51b46065cfde445617401ebe309a33b62a29725"
