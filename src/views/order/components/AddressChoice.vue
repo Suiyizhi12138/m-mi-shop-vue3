@@ -4,7 +4,7 @@
       <a href="javascript:" class="link-back" @click="closeAddressChoice">
         <i class="iconfont icon-arrow-left"></i>
       </a>
-      <span class="header-title">编辑收货地址</span>
+      <span class="header-title">选择收货地址</span>
     </header>
     <div class="address-list-container">
       <ul class="address-list">

@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-//import 'vant/lib/index.css'
 import { Button, Col, Row, Dialog, Popup, Loading, PullRefresh, Swipe, SwipeItem, Lazyload,Toast,Area } from 'vant'
 import { DropdownMenu, DropdownItem, RadioGroup, Radio } from 'vant'
 import { Sticky } from 'vant'
@@ -61,6 +60,7 @@ createApp(App)
   .use(Sticky)
   .use(DropdownMenu)
   .use(DropdownItem)
+  .use(RadioGroup)
   .use(Radio)
   .use(Toast) 
   .use(Area)

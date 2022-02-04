@@ -76,6 +76,22 @@ const deleteAddress = (id) => {
     }
   })
 }
+//添加（创建订单）
+const addOrder = (data) => {
+  return Axios.post(`${apiUrl}/add_order`,data)
+}
+//获取所有订单
+const getOrders = () => {
+  return Axios.get(`${apiUrl}/orders`)
+}
+//获取单个订单
+const getOrder = (no) => {
+  return Axios.get(`${apiUrl}/order/${no}`)
+}
+//支付
+const cost = (data) => {
+  return Axios.post(`${apiUrl}/pay/cost`,data)
+}
 
 
 export default{
@@ -94,4 +110,8 @@ export default{
   addAddress,
   updateAddress,
   deleteAddress,
+  addOrder,
+  getOrders,
+  getOrder,
+  cost,
 }

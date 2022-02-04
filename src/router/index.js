@@ -147,14 +147,19 @@ const routes = [
       title: '注册'
     }
   },
+  //订单页
   {
     path: '/order',
     name: 'order',
     component: () => import('@/views/order/OrderPage'),
     meta: {
       title: '我的订单'
+    },
+    beforeEnter(to,from,next){
+      testLoginAndNext(next)
     }
   },
+  //确认订单页
   {
     path: '/check_order',
     name: 'check_order',
@@ -165,9 +170,21 @@ const routes = [
     beforeEnter(to,from,next){
       testLoginAndNext(next)
     }
-
-
+  },
+  //支付订单页
+  {
+    path: '/pay_order/:no',
+    name: 'pay_order',
+    component: () => import('@/views/pay/PayOrder'),
+    meta: {
+      title: '支付订单'
+    },
+    beforeEnter(to,from,next){
+      testLoginAndNext(next)
+    }
   }
+
+
   
   
   

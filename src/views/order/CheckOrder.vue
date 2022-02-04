@@ -34,40 +34,49 @@
           <span>{{userInfo?userInfo.phone: ''}}</span>
         </div>
         <div class="user-address">
-          广东省 广州市 白云区 均和大道 大朗站
+          <div class="address-tips" v-if="address">{{address.district }} {{ address.address}}</div>
+          <div class="address-tips"  v-else style="color: #ff6700">请选择收货地址</div>
         </div>
       </div>
       <div class="address-choice-right flex-column">
-        <i class="iconfont icon-arrowright"></i>
+        <i class="iconfont icon-arrowright" style="color: #ff6700"></i>
       </div>
     </div>
     <div class="order-list-container">
       <ul class="order-list">
-        <li class="order-list-item flex-between" v-for="item in 5">
+        <li class="order-list-item flex-between" v-for="item in buyItems">
           <div class="product-img-box">
-            <img src="https://cdn.cnbj0.fds.api.mi-img.com/b2c-shopapi-pms/pms_1617014229.6133749.jpg?thumb=1&w=80&h=80" alt="">
+            <img :src="item.product_sku.imgs[0]" alt="">
           </div>
           <div class="product-name-box flex-wrap">
-            {{'小米11青春版'}} {{' 8GB+32GB 荔枝青 111111111111111111111111'}}
+            {{item.product_sku.product.zh_name}} {{item.product_sku.name.replace(/-/,' ')}}
           </div>
           <div class="product-price-box">
-            {{'2'}}x{{'1999'}}
+            {{item.amount}}x{{item.product_sku.price}}
           </div>
         </li>
       </ul> 
     </div>
     <div class="service-list-container">
       <ul class="service-list">
-        <li class="service-list-item flex-between" v-for="item in 3">
+        <li class="service-list-item flex-between">
           <div class="item-title">运费</div>
           <div class="item-detail">包邮</div>
+        </li>
+        <li class="service-list-item flex-between">
+          <div class="item-title">电子普通发票</div>
+          <div class="item-detail">个人</div>
+        </li>
+        <li class="service-list-item flex-between">
+          <div class="item-title">优惠券</div>
+          <div class="item-detail">无可用</div>
         </li>
       </ul>
     </div>
     <div class="sum-price-container">
       <div class="sum-item sum-price">
         <span class="price-title">商品价格：</span>
-        <span class="price-number">4097.00</span>
+        <span class="price-number">{{totalPrice?totalPrice:''}}</span>
       </div>
       <div class="sum-item sum-express">
         <span class="price-title">配送费用：</span>
@@ -75,12 +84,12 @@
       </div>
     </div>
     <footer class="check-order-footer">
-      <div class="footer-address">
-        配送至 广东 广州市 均禾街道 大朗总站（公交站）
+      <div class="footer-address" v-if="address">
+        配送至 {{address.district }} {{ address.address}}
       </div>
       <div class="footer-btn-box flex-start">
         <div class="footer-total">
-          共{{'5'}}件 合计：<span class="total-price">{{'4097.00'}}</span>
+          共{{totalAmount}}件 合计：<span class="total-price">{{totalPrice}}</span>
         </div>
         <div class="footer-btn flex-column" @click="submitOrder()">去付款</div>
       </div>
@@ -98,6 +107,8 @@ import  AddressChoice  from './components/AddressChoice'
 import { reactive,toRefs,computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { Toast } from 'vant'
+import FetchAPI from '@/utils/fetchApi'
 export default {
   components: {
     AddressHeader,
@@ -117,9 +128,57 @@ export default {
     const showAddressChoice = () => {
       state.isShowAddressChoice = true
     }
+    //购买项目
+    const buyItems = computed(()=>{
+      if(store.getters.buyItems){
+        return store.getters.buyItems
+      }else{
+        return JSON.parse(localStorage.getItem('_buy_items'))
+      }
+    })
+    //商品总价
+    const totalPrice = computed(() => {
+      let total = 0;
+      buyItems._value.forEach((item)=>{
+        total += item.amount*item.product_sku.price
+      })
+      return total
+    })
+    
+    const totalAmount = computed(()=>{
+      let amount = 0;
+      buyItems._value.forEach((item)=>{
+        amount += item.amount
+      })
+
+      return amount
+    }) 
+    //提交订单
     const submitOrder = () => {
-      console.log(store.getters.buyItems)
+      if(!state.address){
+        state.isShowAddressChoice = true
+        return;
+      }
+      const data = {
+        address_id: state.address.id,
+        items: buyItems._value
+      }
+      Toast.loading('正在创建订单')
+      FetchAPI.addOrder(data)
+      .then((res)=>{
+        if(res.status==200){
+          localStorage.removeItem('_full_cart')
+          localStorage.removeItem('_buy_items')
+          localStorage.setItem(''+res.data[0].no,JSON.stringify({
+            created_at: Date.now()
+          }))
+          Toast.clear()
+          //跳转到支付订单页
+          router.push('/pay_order/'+res.data[0].no)
+        }
+      })
     }
+    //用户信息 
     const userInfo = computed(()=>{
       if(store.getters.userInfo){
         return store.getters.userInfo
@@ -140,7 +199,10 @@ export default {
       submitOrder,
       userInfo,
       handleCloseAddressChoice,
-      getAddressFromChild
+      getAddressFromChild,
+      buyItems,
+      totalPrice,
+      totalAmount
     }
   }
 }
@@ -150,6 +212,7 @@ export default {
 .check-order-page{
   background-color: #f5f5f5;
   text-align: left;
+  padding-bottom: 12px;
   .header-tips{
     background-color: rgb(251,247,231);
     color: #c14d00;
