@@ -103,6 +103,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+
 .user-address-page{
   background-color: #fff;
   height: 100%;
@@ -170,7 +171,6 @@ export default {
     
   }
 }
-
 .footer {
   position: fixed;
   bottom: 0px;
@@ -190,4 +190,5 @@ export default {
     font-weight: 600;
   }
 }
+
 </style>

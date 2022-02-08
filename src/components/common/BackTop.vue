@@ -38,12 +38,9 @@ export default {
     z-index: 99;
     bottom: 70px;
     right: 12px;
-    
-    
     img{
       width: 40px;
       height: 40px;
-      
     }
   }
 </style>

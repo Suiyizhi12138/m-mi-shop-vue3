@@ -88,6 +88,14 @@ const getOrders = () => {
 const getOrder = (no) => {
   return Axios.get(`${apiUrl}/order/${no}`)
 }
+//删除订单
+const deleteOrder = (no) => {
+  return Axios.delete(`${apiUrl}/order`,{
+    data: {
+      no: no
+    }
+  });
+}
 //支付
 const cost = (data) => {
   return Axios.post(`${apiUrl}/pay/cost`,data)
@@ -113,5 +121,6 @@ export default{
   addOrder,
   getOrders,
   getOrder,
+  deleteOrder,
   cost,
 }

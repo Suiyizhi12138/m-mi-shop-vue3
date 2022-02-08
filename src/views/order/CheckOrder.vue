@@ -144,7 +144,6 @@ export default {
       })
       return total
     })
-    
     const totalAmount = computed(()=>{
       let amount = 0;
       buyItems._value.forEach((item)=>{
