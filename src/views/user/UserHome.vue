@@ -128,7 +128,6 @@
             <div class="item-right"><i class="iconfont icon-arrowright"></i></div>
           </router-link>
         </div>
-        
       </div>
     </div>
   </div>
@@ -150,7 +149,6 @@ export default {
       if(store.getters.userInfo){
         return store.getters.userInfo
       }
-      
     })
     return {
       ...toRefs(state),

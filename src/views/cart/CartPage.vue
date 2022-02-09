@@ -1,7 +1,7 @@
 <template>
   <div class="cart-page">
     <common-header :title="'购物车'"></common-header>
-    <div class="cart-content">
+    <div class="cart-content" v-if="cartItems.length>0">
       <div class="cart-item flex-start" v-for="(item,index) in cartItems" :key="index">
         <div class="cart-left flex-center">
           <div
@@ -37,6 +37,12 @@
         </div>
       </div>
     </div>
+    <div class="cart-null-info " v-else>
+      购物车还是空的
+      <router-link to="/" class="btn-other">
+        去逛逛
+      </router-link>
+    </div>
     <div class="cart-tips">
       <p>温馨提示：产品是否购买成功，以最终下单为准，请尽快结算</p>
     </div>
@@ -58,7 +64,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { onMounted, reactive, toRefs, computed } from "vue";
 import FetchAPI from "@/utils/fetchApi";
@@ -70,7 +75,6 @@ export default {
   created() {
     this.$store.dispatch("getCartItems");
   },
-
   setup() {
     const state = reactive({
       //cartItems: [],//购物车项目
@@ -115,7 +119,6 @@ export default {
         totalAmount += item.amount;
         totalPrice += parseFloat(item.product_sku.price*item.amount);
       });
-
       state.checkedTotalAmount = totalAmount;
       state.checkedTotalPrice = totalPrice;
     };
@@ -191,7 +194,6 @@ export default {
   text-align: left;
   padding-bottom: 50px;
   background-color: #f5f5f5;
-
   .cart-content {
     overflow: hidden;
     background-color: #f5f5f5;
@@ -291,6 +293,27 @@ export default {
           }
         }
       }
+    }
+  }
+  .cart-null-info {
+    background: url(https://m.mi.com/static/img/cartnull.daaf7926f8.png) no-repeat 0;
+    font-size: 12px;
+    background-color: #ebebeb; 
+    width: 375px;
+    height: 60px;
+    color: #999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 26px;
+    text-align: center;
+    background-size: 44px 36px;
+    background-position: 15% 50%;
+    .btn-other{
+      width: 66px;
+      height: 26px;
+      border: 1px solid #999;
+      margin-left: 5px;
     }
   }
   .cart-tips {

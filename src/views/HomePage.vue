@@ -7,7 +7,6 @@
     </div>
     <back-top></back-top>
     <router-view></router-view>
-
     <!-- 首页底部按钮 -->
     <footer class="footer-home">
       <router-link to="/home" class="link-button link-home">
@@ -38,7 +37,7 @@
         <!-- <img  src="https://m.mi.com/static/img/icon-cart.585c3aa4d3.png" alt=""> -->
         <!-- <img  src="https://m.mi.com/static/img/icon-cart-selected.0099b47830.png" alt=""> -->
         <span>购物车</span>
-        <span class="cart-item-amount">{{totalAmount}}</span>
+        <span v-if="totalAmount>0" class="cart-item-amount">{{totalAmount}}</span>
       </router-link>
       <router-link to="/user" class="link-button link-user">
         <img src="../assets/icon/icon-user.png" alt="user-icon" />
@@ -50,19 +49,15 @@
     </footer>
   </div>
 </template>
-
 <script>
 import { reactive, toRefs } from "vue";
 import BackTop from "@/components/common/BackTop";
 import { useStore } from 'vuex'
-
 export default {
-  
   computed: {
     totalAmount(){
       return this.$store.getters.cartTotalAmount
     }
-
   },
   setup() {
     const state = reactive({
@@ -75,7 +70,6 @@ export default {
     return {
       ...toRefs(state),
       closeAd,
-     
     };
   },
   components: {
