@@ -91,7 +91,7 @@ export default {
       width: 100%;
       height: 50px;
     }
-    .close-btn {
+    .close-btn{
       width: 8%;
       height: 50px;
       //background-color: #ff6700;
@@ -101,7 +101,7 @@ export default {
       top: 0px;
     }
   }
-  .footer-home {
+  .footer-home{
     width: 100%;
     height: 52px;
     position: fixed;

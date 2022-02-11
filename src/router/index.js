@@ -1,10 +1,10 @@
-import { createRouter, createWebHashHistory,useRouter } from 'vue-router'
+import { createRouter, createWebHashHistory, useRouter } from 'vue-router'
 
 const testLoginAndNext = (nextFunc) => {
-  if(localStorage.getItem('_user_token')){
+  if (localStorage.getItem('_user_token')) {
     nextFunc()
-  }else{
-    nextFunc({name: 'user_login'})
+  } else {
+    nextFunc({ name: 'user_login' })
   }
 }
 const routes = [
@@ -13,45 +13,54 @@ const routes = [
     name: 'home',
     component: () => import('@/views/HomePage'),
     redirect: '/home',
-    meta:{
-      title:'小米官方网站'
+    meta: {
+      title: '小米官方网站'
     },
     children: [
       {
         path: '/home',
         name: '_home',
         component: () => import('@/views/main-page/MainPage'),
-        
       },
       {
         path: 'category',
-        name:'category',
+        name: 'category',
         component: () => import('@/views/category/CategoryPage'),
         meta: {
           title: '分类'
         }
       },
       {
-        path: 'mi-blog',
-        name: 'mi_blog',
-        component: () => import('@/views/MiBlogPage'),
-        meta: {
-          title: '米圈'
-        }
-
-      },
-      {
-        path:'user',
-        name:'user',
+        path: 'user',
+        name: 'user',
         component: () => import('@/views/user/UserHome'),
         meta: {
           title: '用户中心'
         },
-        beforeEnter(to,from,next){
+        beforeEnter(to, from, next) {
           testLoginAndNext(next)
         }
 
-      }
+      },
+      //米圈
+      { 
+        path: 'mi-blog',
+        name: 'mi_blog',
+        component: () => import('@/views/mi-blog/MiBlogPage'),
+        children: [
+          {
+            path: 'star',
+            name: 'blog_star',
+            component: () => import('@/views/mi-blog/components/BlogStar')
+          },
+          {
+            path: 'recommend',
+            name: 'blog_recommend',
+            component: () => import('@/views/mi-blog/components/BlogRecommend')
+          }
+        ]
+      },
+
     ]
   },
   {
@@ -72,14 +81,12 @@ const routes = [
     meta: {
       title: '购物车'
     },
-    beforeEnter(to,from,next){
-      if(localStorage.getItem('_user_token')){
+    beforeEnter(to, from, next) {
+      if (localStorage.getItem('_user_token')) {
         next()
-        
-      }else{
-        next({name: 'user_login'})
+      } else {
+        next({ name: 'user_login' })
       }
-      
     }
   },
   {
@@ -116,7 +123,7 @@ const routes = [
     meta: {
       title: '个人中心'
     },
-    beforeEnter(to,from,next){
+    beforeEnter(to, from, next) {
       testLoginAndNext(next)
     }
   },
@@ -155,7 +162,7 @@ const routes = [
     meta: {
       title: '我的订单'
     },
-    beforeEnter(to,from,next){
+    beforeEnter(to, from, next) {
       testLoginAndNext(next)
     }
   },
@@ -167,7 +174,7 @@ const routes = [
     meta: {
       title: '确认订单'
     },
-    beforeEnter(to,from,next){
+    beforeEnter(to, from, next) {
       testLoginAndNext(next)
     }
   },
@@ -179,15 +186,16 @@ const routes = [
     meta: {
       title: '支付订单'
     },
-    beforeEnter(to,from,next){
+    beforeEnter(to, from, next) {
       testLoginAndNext(next)
     }
-  }
+  },
 
 
-  
-  
-  
+
+
+
+
 ]
 
 const router = createRouter({
