@@ -7,18 +7,17 @@
         </div>
         <div class="btn-box flex-start">
           <div class="link-star-box">
-            <router-link to="/mi-blog/star" class="link-star">关注</router-link>
+            <a href="javascript:" @click="switchComponent(1)" :class="{'btn-active': activeIndex==1}">关注</a>
           </div>
           <div class="link-recommend-box flex-start">
-            <router-link to="/mi-blog/recommend" class="link-recommend">推荐</router-link>
+            <a href="javascript:" @click="switchComponent(2)" :class="{'btn-active': activeIndex==2}">推荐</a>
           </div>
         </div>
       </div>
       <div class="header-right flex-start">
         <div class="link-box" style="padding-bottom:2px">
-          <router-link to >雷军超大杯</router-link>
+          <router-link to='/'>雷军超大杯</router-link>
         </div>
-        
         <div class="bell-box flex-start">
           <div>|</div>
           <div class="bell">
@@ -27,39 +26,34 @@
         </div>
       </div>
     </div>
-    <router-view></router-view>
-    <div class="comment-item">
-      <div class="comment-header flex-between">
-        <div class="comment-header-left flex-start">
-          <div class="user-avatar">
-            <img
-              src="https://cdn.cnbj1.fds.api.mi-img.com/user-avatar/becb7ffb-bf68-4494-bcaf-02e2f8335215.jpg?thumb=150x150"
-              alt
-            />
-          </div>
-          <div class="user-info flex-column">
-            <p class="user-name">pizimeng的黑科技</p>
-            <p class="user-phone">Mi 10 Ultra</p>
-          </div>
-        </div>
-        <div class="comment-header-right">
-          <a href="javascript:">
-            <img src="../../assets/images/menu.png" alt />
-          </a>
-        </div>
-      </div>
-      <!-- 评论 -->
-      <div class="comment-content">
-        <p>很喜欢k40游戏这个带感的视频，有点意思，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，</p>
-      </div>
-    </div>
-
-    
+    <blog-recommend v-show="activeIndex==2"></blog-recommend>
+    <blog-star v-show="activeIndex==1"></blog-star>
   </div>
 </template>
 
 <script>
-export default {};
+import BlogRecommend from './components/BlogRecommend'
+import BlogStar from './components/BlogStar'
+import { reactive,toRefs } from 'vue'
+import { useRouter }  from 'vue-router'
+export default {
+  components: {
+    BlogRecommend,
+    BlogStar
+  },
+  setup(){
+    const state = reactive({
+      activeIndex: 1    
+    })
+    const switchComponent = (index) => {
+      state.activeIndex = index;
+    }
+    return {
+      ...toRefs(state),
+      switchComponent
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -92,22 +86,20 @@ export default {};
       display: inline-block;
       padding-bottom: 5px;
     }
-    .router-link-active {
+    a.btn-active{
       color: #333;
-      &::after {
-        content: "";
+      &::after{
+        content: '';
         width: 10px;
         height: 2px;
         background-color: #333;
-        border-radius: 5%;
-        display: block;
-        z-index: 1;
         position: absolute;
         bottom: 0px;
         left: 50%;
         transform: translateX(-50%);
       }
     }
+    
     .link-star-box {
       position: relative;
     }

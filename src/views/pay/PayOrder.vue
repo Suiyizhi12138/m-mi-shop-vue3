@@ -86,10 +86,14 @@ export default {
         cost: parseFloat(state.order.total_amount),
         no: state.order.no
       }
-
+      Toast.loadind('正在支付')
       FetchAPI.cost(data)
       .then((res)=>{
-        
+        if(res.status==200)
+        Toast.clear()
+        router.push({
+          name: 'order'
+        })
       })
       .catch((res)=>{
         if(res.status==400){

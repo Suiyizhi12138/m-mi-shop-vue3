@@ -30,6 +30,7 @@ const routes = [
           title: '分类'
         }
       },
+      //用户主页
       {
         path: 'user',
         name: 'user',
@@ -47,19 +48,16 @@ const routes = [
         path: 'mi-blog',
         name: 'mi_blog',
         component: () => import('@/views/mi-blog/MiBlogPage'),
-        children: [
-          {
-            path: 'star',
-            name: 'blog_star',
-            component: () => import('@/views/mi-blog/components/BlogStar')
-          },
-          {
-            path: 'recommend',
-            name: 'blog_recommend',
-            component: () => import('@/views/mi-blog/components/BlogRecommend')
-          }
-        ]
       },
+      //搜索列表页
+      {
+        path: '/search/list',
+        name: 'search_list',
+        component: () => import('@/views/search/SearchList'),
+        meta: {
+          title: '搜索结果'
+        }
+      }
 
     ]
   },

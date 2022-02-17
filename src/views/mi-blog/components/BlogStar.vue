@@ -1,6 +1,6 @@
 <template>
   <div class="star-component">
-    <h1> this is star</h1>
+    <h1 style="margin-top: 100px;"> 暂时还没有关注</h1>
   </div>
 </template>
 
@@ -11,5 +11,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+    .star-component{
+      overflow: hidden;
+    }
 </style>

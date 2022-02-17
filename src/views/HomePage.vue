@@ -80,6 +80,7 @@ export default {
 
 <style lang="scss" scoped>
 .home-page {
+  overflow: hidden;
   .top-ad {
     width: 100%;
     height: 50px;
@@ -102,9 +103,10 @@ export default {
     }
   }
   .footer-home{
-    width: 100%;
+    width: 375px;
     height: 52px;
     position: fixed;
+    z-index: 19;
     bottom: 0;
     display: flex;
     align-items: center;

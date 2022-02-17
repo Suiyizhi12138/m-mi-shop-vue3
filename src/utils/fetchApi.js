@@ -100,6 +100,12 @@ const deleteOrder = (no) => {
 const cost = (data) => {
   return Axios.post(`${apiUrl}/pay/cost`,data)
 }
+//搜索商品
+const searchByKey = (key) => {
+  return Axios.post(`${apiUrl}/search-products`,{
+    keyword: key
+  })
+}
 
 
 export default{
@@ -123,4 +129,5 @@ export default{
   getOrder,
   deleteOrder,
   cost,
+  searchByKey
 }

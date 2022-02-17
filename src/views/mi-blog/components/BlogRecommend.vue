@@ -87,6 +87,7 @@ export default {};
 
 <style lang="scss" scoped>
 .recommend {
+  overflow: hidden;
   .image-header {
     height: 138px;
     padding: 16px;
@@ -122,7 +123,6 @@ export default {};
         }
         .user-phone {
           width: 100px;
-
           color: #999;
         }
       }
@@ -155,7 +155,7 @@ export default {};
         transform: translateX(-50%) translateY(-50%);
         width: 200px;
         height: 200px;
-        z-index: 99;
+        z-index: 3;
         background-size: 30px 30px;
       }
     }
