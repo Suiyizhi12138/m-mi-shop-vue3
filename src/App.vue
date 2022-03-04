@@ -4,9 +4,11 @@
 <script>
 export default {
   created() {
-    this.$store.dispatch("getCartItems");
-    if (!this.$store.getters.userInfo) {
-      this.$store.dispatch("getUserInfo");
+    if (localStorage.getItem("_user_token")) {
+      this.$store.dispatch("getCartItems");
+      if (!this.$store.getters.userInfo) {
+        this.$store.dispatch("getUserInfo");
+      }
     }
   }
 };
@@ -88,13 +90,11 @@ hr {
   align-items: center;
 }
 //absolute垂直水平居中
-.absolute-center{
+.absolute-center {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
-
- 
 }
 button {
   border: none;

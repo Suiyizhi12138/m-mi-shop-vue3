@@ -144,12 +144,16 @@ export default {
         .then(res => {
           state.loginStatus = 2;
           localStorage.setItem('_user_token',res.data.access_token);
+          console.log('login-'+localStorage.getItem('_user_token'));
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('_user_token');
           Toast.clear()
-          router.go(-1)
+          router.push({
+            path: '/user'
+          })
         })
-        .catch(() => {
+        .catch((e) => {
           state.loginStatus = 3;
+          console.log(e);
           Toast.fail('登录失败')
         });
     };
@@ -231,7 +235,6 @@ export default {
       padding-left: 20px;
       margin-bottom: 12px;
       transition: all 0.3s linear;
-
       &:focus {
         border: 2px solid blue;
       }

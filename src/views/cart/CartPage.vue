@@ -73,7 +73,10 @@ import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 export default {
   created() {
-    this.$store.dispatch("getCartItems");
+    if(localStorage.getItem('_user_token')){
+      this.$store.dispatch("getCartItems");
+    }
+    
   },
   setup() {
     const state = reactive({

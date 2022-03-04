@@ -44,7 +44,6 @@ import 'vant/es/button/style';
       const toast = ()=>{
         Toast.loading('loading')
       }
-
       return {
         toast
       }

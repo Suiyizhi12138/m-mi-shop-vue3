@@ -11,14 +11,14 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('@/views/HomePage'),
     redirect: '/home',
+    component: () => import('@/views/HomePage'),
     meta: {
       title: '小米官方网站'
     },
     children: [
       {
-        path: '/home',
+        path: 'home',
         name: '_home',
         component: () => import('@/views/main-page/MainPage'),
       },
@@ -37,9 +37,6 @@ const routes = [
         component: () => import('@/views/user/UserHome'),
         meta: {
           title: '用户中心'
-        },
-        beforeEnter(to, from, next) {
-          testLoginAndNext(next)
         }
 
       },
@@ -78,13 +75,6 @@ const routes = [
     component: () => import('@/views/cart/CartPage'),
     meta: {
       title: '购物车'
-    },
-    beforeEnter(to, from, next) {
-      if (localStorage.getItem('_user_token')) {
-        next()
-      } else {
-        next({ name: 'user_login' })
-      }
     }
   },
   {
@@ -159,9 +149,6 @@ const routes = [
     component: () => import('@/views/order/OrderPage'),
     meta: {
       title: '我的订单'
-    },
-    beforeEnter(to, from, next) {
-      testLoginAndNext(next)
     }
   },
   //确认订单页
