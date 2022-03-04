@@ -311,8 +311,9 @@ export default {
           //初始化选中商品型号
           checkType();
         })
-        .catch(() => {
+        .catch((e) => {
           state.loadProductStatus = 3;
+          console.log(e)
           Toast.fail("加载失败，请重试");
         });
     };

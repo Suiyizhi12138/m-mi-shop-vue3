@@ -5,17 +5,17 @@
     <div class="swipe-container">
       <van-swipe autoplay="3000" indicator-color="white">
         <van-swipe-item>
-          <router-link to='/'>
+          <router-link to='/product/7'>
           <img src="../../../assets/images/home/swipe-mi11.jpg" alt />
           </router-link>
         </van-swipe-item>
         <van-swipe-item>
-          <router-link to='/product/9'>
-          <img src="../../../assets/images/home/swipe-mi12.jpg" alt />
+          <router-link to='/product/96'>
+          <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/7cd97fa20373a20cf9305f97ff38847f.jpg?thumb=1&w=720&h=360" alt />
           </router-link>
         </van-swipe-item>
         <van-swipe-item>
-          <router-link to='/product/9'>
+          <router-link to='/'>
           <img src="../../../assets/images/home/swipe-mishen.jpg" alt />
           </router-link>
         </van-swipe-item>
@@ -78,10 +78,10 @@
         </div>
 
         <ul class="recommend-phone-list">
-          <li class="recommend-phone-item" v-for="phone in recommendPhones" :key="phone.id">
+          <li class="recommend-phone-item"   v-for="phone in recommendPhones" :key="phone.id">
             <router-link :to="'/product/'+phone.id">
               <div class="phone-item-top">
-                <van-image :src="phone.image_url" lazy-load></van-image>
+                <van-image :src="phone.image_url" fit="contain"  height="33.6vw" lazy-load></van-image>
               </div>
               <div class="phone-item-bottom">
                 <p class="text-item phone-name">{{phone.zh_name}}</p>
@@ -316,7 +316,7 @@ div.recommend-page {
           .phone-item-top {
             
             .van-image {
-              max-height: 126px;
+              overflow: hidden;
             }
           }
           .phone-item-bottom {
