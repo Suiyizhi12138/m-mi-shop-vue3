@@ -67,7 +67,9 @@ import { reactive, toRefs } from "vue";
 import FetchAPI from "@/utils/fetchApi";
 import { Toast } from "vant";
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import axios from 'axios'
+import Config from '@/config/index'
 export default {
   components: {
     UserHeader
@@ -86,6 +88,7 @@ export default {
       },
       loginStatus: 0 //0未登录 1-loginig 2-logined 3-failed
     });
+    const store = useStore()
     const checkEmail = () => {
       state.validateOptions.isEmailValidated = true;
       const regexpEmail = /^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
@@ -144,12 +147,10 @@ export default {
         .then(res => {
           state.loginStatus = 2;
           localStorage.setItem('_user_token',res.data.access_token);
-          console.log('login-'+localStorage.getItem('_user_token'));
+          store.dispatch('checkUserLoginStatus')
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('_user_token');
           Toast.clear()
-          router.push({
-            path: '/user'
-          })
+          window.location.href = Config.DOMAIN+'/#/user'
         })
         .catch((e) => {
           state.loginStatus = 3;

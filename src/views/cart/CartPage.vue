@@ -1,6 +1,13 @@
 <template>
   <div class="cart-page">
     <common-header :title="'购物车'"></common-header>
+    <nav class="nav-login" v-show="!isLogin">
+      <router-link to="/user/login" class="flex-between">
+        <div class="nav-left">登录后享受更多优惠</div>
+        <div class="nav-right">去登陆></div>
+      </router-link>
+     
+    </nav>
     <div class="cart-content" v-if="cartItems.length>0">
       <div class="cart-item flex-start" v-for="(item,index) in cartItems" :key="index">
         <div class="cart-left flex-center">
@@ -71,6 +78,7 @@ import { Toast } from "vant";
 import CommonHeader from "@/components/common/CommonHeader";
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
+
 export default {
   created() {
     if(localStorage.getItem('_user_token')){
@@ -84,10 +92,16 @@ export default {
       checkedItemIndexs: [], //选中的购物车项目下标 array[index1,index2,index3]
       checkedItems: [], //选中的购物车项目 array[{},{},{}]
       checkedTotalAmount: 0, //选中总件数
-      checkedTotalPrice: 0 //选中总价
+      checkedTotalPrice: 0, //选中总价
+      isLogin: false,//是否登录
     });
     const store = useStore();
-    const router = useRouter()
+    const router = useRouter();
+    onMounted(()=>{
+      if(localStorage.getItem('_user_token')){
+        state.isLogin = true
+      }
+    })
     //选中购物车项目
     const checkItem = index => {
       //如果该项不在数组中则加入
@@ -172,7 +186,11 @@ export default {
           store.dispatch('saveBuyItems',state.checkedItems)
           router.push({name:"check_order"})
         }
-    }
+    };
+    //是否已登录
+    let  isLogin = computed(()=>{
+      return store.getters.userLoginStatus == 2;
+    })
 
     return {
       ...toRefs(state),
@@ -181,7 +199,8 @@ export default {
       cartItems,
       incAmount,
       decAmount,
-      submitCart
+      submitCart,
+      isLogin
     };
   },
   components: {
@@ -197,6 +216,24 @@ export default {
   text-align: left;
   padding-bottom: 50px;
   background-color: #f5f5f5;
+  .nav-login{
+    height: 55px;
+    padding: 0 16px;
+    background-color: #fff;
+    a{
+      height: 55px;
+      text-align: center;
+    }
+    .nav-left{
+      font-size: 16px;
+      font-weight: 500;  
+    }
+    .nav-right{
+      font-size: 12px;
+      color: #999;
+
+    }
+  }
   .cart-content {
     overflow: hidden;
     background-color: #f5f5f5;

@@ -87,18 +87,22 @@
 import CommonHeader from '@/components/common/CommonHeader'
 import FetchAPI from '@/utils/fetchApi'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import Config from '@/config/index'
 export default {
   components: {
     CommonHeader
   },
   setup(){
     const router = useRouter()
+    const store = useStore()
     const logOut = () => {
       FetchAPI.userLogOut()
       .then((res)=>{
         if(res.status==200){
           localStorage.removeItem('_user_token')
-          router.push({name: 'home'})
+          store.dispatch('checkUserLoginStatus')
+          window.location.href = Config.DOMAIN+'/home'
         }
          
       })

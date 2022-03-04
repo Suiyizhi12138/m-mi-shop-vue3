@@ -4,6 +4,7 @@
 <script>
 export default {
   created() {
+    this.$store.dispatch('checkUserLoginStatus')
     if (localStorage.getItem("_user_token")) {
       this.$store.dispatch("getCartItems");
       if (!this.$store.getters.userInfo) {

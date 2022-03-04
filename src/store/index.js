@@ -27,7 +27,7 @@ export default createStore({
     }
   },
   actions: {
-    checkUserLoginstatus({ commit }) {
+    checkUserLoginStatus({ commit }) {
       if (localStorage.getItem('_user_token')) {
         commit('setUserLoginStatus', 2)
       }

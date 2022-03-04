@@ -4,7 +4,7 @@
     <header class="user-home-header">
       <div class="header-content">
         <img src="https://s1.mi.com/m/images/m/default.png" alt />
-        <div class="user-name" v-if="true">
+        <div class="user-name" v-if="isLogin">
           <span class="user-name-text">{{userInfo?userInfo.personal_info.nick_name:''}}</span>
           <br />
           <span class="user-special-word">{{userInfo?'12138'+userInfo.id:''}}</span>
@@ -139,6 +139,7 @@ import {  useStore } from 'vuex'
 export default {
   created(){
     //this.$store.dispatch('getUserInfo')
+    
   },
   setup(){
     const state = reactive({
@@ -150,9 +151,13 @@ export default {
         return store.getters.userInfo
       }
     })
+    let isLogin = computed(()=>{
+      return store.getters.userLoginStatus == 2
+    })
     return {
       ...toRefs(state),
-      userInfo
+      userInfo,
+      isLogin
     }
   }
 };
