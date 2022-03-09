@@ -1,5 +1,5 @@
-const API_URL = 'http://mi-shop.test/api'
-const DOMAIN = 'http://localhost:8081'
+const API_URL = 'http://m.efront.top/index/api'
+const DOMAIN = 'http://m.efront.top'
 const AMAP_URL = '/v3'
 const AMAP_KEY_WEB = '56f660b153d242ab5dd813d5498b1074'
 export default{

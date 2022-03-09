@@ -3,16 +3,15 @@ const path = require('path')
 function resolve(dir){
   return path.join(__dirname,dir);
 }
-
-
 module.exports = {
   devServer: {
-    port: 8081,
+   
     proxy: {
-      '/api':{
-        target: 'http://mi-shop.test',
-        changeOrgin: true
-      },
+     
+      // '/api': {
+      //   target: 'http://efront.test/api',
+      //   changeOrgin: true
+      // },
       '/v3': {
         target: 'https://restapi.amap.com',
         changeOrgin: true,
