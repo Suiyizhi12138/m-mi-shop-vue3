@@ -6,7 +6,7 @@
       <div class="close-btn" @click="closeAd"></div>
     </div>
     <back-top></back-top>
-    <router-view></router-view>
+    <router-view :key="$route.fullPath"></router-view>
     <!-- 首页底部按钮 -->
     <footer class="footer-home">
       <router-link to="/home" class="link-button link-home">

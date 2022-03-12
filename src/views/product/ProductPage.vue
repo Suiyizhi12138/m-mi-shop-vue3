@@ -62,10 +62,11 @@
         <div class="action-seprate-line"></div>
         <div class="action-box action-address">
           <div class="action-title">送至</div>
-          <div class="action-content" @click="chooseAddress">
+          <div class="action-content" @click="showAddressPop">
             <div class="action-content-left">
               <i class="iconfont icon-locate1e"></i>
-              <span>{{'深圳市清湖老村4巷18号110'}}</span>
+              <span class="locate-city">{{"北京市 东城区"}}</span>
+              <span class="locate-info">有现货</span>
             </div>
             <div class="action-content-right">
               <span>
@@ -241,24 +242,59 @@
         </div>
       </div>
     </van-popup>
+    <van-popup
+      v-model:show="isShowAddressPop"
+      position="bottom"
+      closeable
+      class="van-popup-address"
+      :style="{height: '80%'}"
+    >
+      <div class="address-content">
+        <h4 class="address-title">收货地址</h4>
+        <ul class="address-list">
+          <li class="address-item" v-for="item in addresses">
+            <a href="javascript:" class="item-link" :class="{'router-link-active': false}">
+              <div class="item-left">
+                <div class="item-left-icon">
+                  <i class="iconfont icon-locate1e"></i>
+                </div>
+                <div class="item-left-info">
+                  <div class="info-header">
+                    <span>{{item.district}}</span><span>{{item.contact_name}}</span>
+                  </div>
+                  <div class="info-footer">
+                    <span>{{item.address}}</span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="item-right flex-center">
+                <i class="iconfont icon-gougou"></i>
+              </div>
+              
+            </a>
+          </li>
+        </ul>
+      </div>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import FetchAPI from "@/utils/fetchApi";
-import { reactive, toRefs, onMounted, computed } from "vue";
+import { reactive, toRefs, onMounted, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import RecommendList from "./components/RecommendList.vue";
 import BackTop from "@/components/common/BackTop";
 import { Toast, Dialog } from "vant";
 export default {
-  created(){
-    this.$store.dispatch('getCartItems')
+  created() {
+    this.$store.dispatch("getCartItems");
   },
   computed: {
-    totalAmount(){
-      return this.$store.getters.cartTotalAmount
+    totalAmount() {
+      return this.$store.getters.cartTotalAmount;
     }
   },
   setup() {
@@ -285,16 +321,31 @@ export default {
 
       skuIndex: 0, //选中sku下标 默认0
       selectedType: [], //选中的商品型号
-      isAddingCart: false //添加购物车flag 防止重复添加
-      
+      isAddingCart: false, //添加购物车flag 防止重复添加
+      val: [1, 2, 3], //test数据
+      isShowAddressPop: false, //是否显示地址弹窗
+      addresses: [] //收货地址数组
     });
     onMounted(() => {
       loadProduct();
       atScroll();
+      loadUserAddresses();
       Promise.resolve().then(() => {
         loadRecommendList();
       });
     });
+
+    //加载用户地址
+    const loadUserAddresses = () => {
+      if (!localStorage.getItem("_user_token")) {
+        return;
+      } else {
+        FetchAPI.getUserAddresses().then(res => {
+         
+          state.addresses = res.data;
+        });
+      }
+    };
 
     //加载商品
     const loadProduct = () => {
@@ -311,12 +362,13 @@ export default {
           //初始化选中商品型号
           checkType();
         })
-        .catch((e) => {
+        .catch(e => {
           state.loadProductStatus = 3;
-          console.log(e)
+          console.log(e);
           Toast.fail("加载失败，请重试");
         });
     };
+    //获取推荐列表
     const loadRecommendList = () => {
       FetchAPI.getAllTopCategories().then(res => {
         if (state.product.hasOwnProperty("name")) {
@@ -519,23 +571,25 @@ export default {
           FetchAPI.addToCart(data)
             .then(res => {
               if (res.status == 200) {
-                FetchAPI.getCartItems()
-                .then((res)=>{
-                  localStorage.setItem('_full_cart',JSON.stringify(res.data))
-                  store.dispatch('getCartItems')
-                  Toast.clear()
-                  state.isAddingCart = false
-                })
+                FetchAPI.getCartItems().then(res => {
+                  localStorage.setItem("_full_cart", JSON.stringify(res.data));
+                  store.dispatch("getCartItems");
+                  Toast.clear();
+                  state.isAddingCart = false;
+                });
               }
             })
             .catch(e => {
               state.isAddingCart = false;
               Toast.fail(e.data.msg);
             });
-            Toast.loading("正在添加");
-          
+          Toast.loading("正在添加");
         }
       }
+    };
+    //显示选择 收货地址选择框
+    const showAddressPop = () => {
+      state.isShowAddressPop = true;
     };
 
     return {
@@ -553,13 +607,21 @@ export default {
       closePopByKey,
       incCount,
       decCount,
-      selectValue
+      selectValue,
+      showAddressPop,
+      loadUserAddresses
     };
   },
   components: {
     RecommendList,
     BackTop
+  },
+  watch: {
+    $route(to, from) {
+      this.$router.go(0);
+    }
   }
+
   // data(){
   //   return {
   //     product: {},
@@ -779,6 +841,12 @@ export default {
           }
           i.iconfont {
             font-size: 14px;
+          }
+          .action-content-left {
+            .locate-info {
+              color: #ff5934;
+              margin-left: 20px;
+            }
           }
         }
       }
@@ -1140,6 +1208,95 @@ export default {
         .btn-buy {
           border-radius: 0 15px 15px 0;
           background-image: linear-gradient(90deg, #ff7010, #ff3700);
+        }
+      }
+    }
+  }
+  .van-popup-address{
+    .address-content{
+      .address-title{
+        font-size: 18px;
+        line-height: 20px;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 14px;
+        color: #333;
+      }
+      .address-list{
+        overflow: hidden;
+        .address-item{
+          overflow: hidden;
+          .item-link{
+            display: block;
+            width: 375px;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .item-left{
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              .item-left-icon{
+                
+                color: #ccc;
+                height: 70px;
+                width: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .icon-locate1e{
+                  font-size: 24px;
+                }
+
+              }
+              .item-left-info{
+                height :70px;
+                box-sizing: border-box;
+                padding: 11px 0;
+                .info-header,.info-footer{
+                  line-height: 24px;
+                }
+                
+              }
+            }
+            .item-right{
+              height: 70px;
+              .icon-gougou{
+                font-size: 12px;
+                color: #fff;
+                margin-right: 30px;
+
+              }
+
+            }
+            
+            .item-right{
+
+            }
+             
+
+          }
+          a.item-link-active{
+              .item-left{
+                .item-left-icon{
+                  .icon-locate1e{
+                    color:!important #ff6700;
+                  }
+                  
+                }
+              }
+              .item-right{
+                .icon-gougou{
+                  color: #ff6700;
+                }
+              }
+
+            }
+
+         
+
         }
       }
     }
