@@ -78,13 +78,13 @@ import { Toast } from "vant";
 import CommonHeader from "@/components/common/CommonHeader";
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
+import Session from '@/utils/session.js'
 
 export default {
   created() {
     if(localStorage.getItem('_user_token')){
       this.$store.dispatch("getCartItems");
-    }
-    
+    } 
   },
   setup() {
     const state = reactive({
@@ -108,7 +108,6 @@ export default {
       if (state.checkedItemIndexs.indexOf(index) == -1) {
         state.checkedItemIndexs.push(index);
         state.checkedItems.push(cartItems._value[index]);
-
         //计算总数和总价
         computeCheckedItems();
       }
@@ -124,7 +123,6 @@ export default {
           ),
           1
         );
-
         //计算总数和总价
         computeCheckedItems();
       }
@@ -183,7 +181,8 @@ export default {
           Toast.fail('请选择要购买的商品')
         }else{
           //储存购物车项目
-          store.dispatch('saveBuyItems',state.checkedItems)
+         Session.setStore('_buy_items',state.checkedItems)
+         Session.removeStore('_buy_item')
           router.push({name:"check_order"})
         }
     };

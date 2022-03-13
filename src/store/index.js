@@ -7,7 +7,8 @@ export default createStore({
     cartTotalAmount: 0,//购物车总件数
     userInfo: null,//用户个人信息
     selectedDistirct: '',//选择的地区、街道信息
-    buyItems: '',//要购买的订单项
+    buyItems: '',//要购买的订单项 购物车
+   
   },
   mutations: {
     setUserLoginStatus(state, status) {
@@ -24,7 +25,11 @@ export default createStore({
     },
     setBuyItems(state,items){
       state.buyItems = items
-    }
+    },
+    
+	
+	
+	
   },
   actions: {
     checkUserLoginStatus({ commit }) {
@@ -67,7 +72,8 @@ export default createStore({
     saveBuyItems({commit},items){
       commit('setBuyItems',items)
       localStorage.setItem('_buy_items',JSON.stringify(items))
-    }
+    },
+
   },
   getters: {
     userLoginStatus(state) {

@@ -33,9 +33,9 @@
           <span >{{userInfo?userInfo.personal_info.nick_name:''}}</span>
           <span>{{userInfo?userInfo.phone: ''}}</span>
         </div>
-        <div class="user-address">
-          <div class="address-tips" v-if="address">{{address.district }} {{ address.address}}</div>
-          <div class="address-tips"  v-else style="color: #ff6700">请选择收货地址</div>
+        <div class="user-address" >
+          <div class="address-tips" v-if="address != null">{{address?address.district:'' }} {{ address?address.address:''}}</div>
+          <div class="address-tips"   style="color: #ff6700" v-else>请选择收货地址</div>
         </div>
       </div>
       <div class="address-choice-right flex-column">
@@ -43,8 +43,8 @@
       </div>
     </div>
     <div class="order-list-container">
-      <ul class="order-list">
-        <li class="order-list-item flex-between" v-for="item in buyItems">
+      <ul class="order-list" v-if="Array.isArray(buyItems)&&buyItems.length>0">
+        <li class="order-list-item flex-between" v-for="item in buyItems" :key="item.id">
           <div class="product-img-box">
             <img :src="item.product_sku.imgs[0]" alt="">
           </div>
@@ -55,7 +55,20 @@
             {{item.amount}}x{{item.product_sku.price}}
           </div>
         </li>
-      </ul> 
+      </ul>
+      <ul class="order-list" v-else>
+        <li class="order-list-item flex-between">
+          <div class="product-img-box">
+            <img :src="buyItem?buyItem.product_sku.imgs[0]:''" alt="">
+          </div>
+          <div class="product-name-box flex-wrap">
+            {{buyItem?buyItem.name:''}} {{buyItem?buyItem.product_sku.name.replace(/-/,' '):''}}
+          </div>
+          <div class="product-price-box">
+            {{buyItem?buyItem.amount:''}}x{{buyItem?buyItem.product_sku.price:''}}
+          </div>
+        </li>
+      </ul>  
     </div>
     <div class="service-list-container">
       <ul class="service-list">
@@ -89,7 +102,7 @@
       </div>
       <div class="footer-btn-box flex-start">
         <div class="footer-total">
-          共{{totalAmount}}件 合计：<span class="total-price">{{totalPrice}}</span>
+          共{{totalAmount?totalAmount:0}}件 合计：<span class="total-price">{{totalPrice}}</span>
         </div>
         <div class="footer-btn flex-column" @click="submitOrder()">去付款</div>
       </div>
@@ -109,6 +122,8 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { Toast } from 'vant'
 import FetchAPI from '@/utils/fetchApi'
+import Session from "@/utils/session.js"
+
 export default {
   components: {
     AddressHeader,
@@ -116,9 +131,9 @@ export default {
   },
   setup(){
     const state = reactive({
-      isShowTips: true,//是否显示提示
+      isShowTips: false,//是否显示提示
       isShowAddressChoice: false,//是否显示选择地址框
-      address: '',//收货地址
+     
     })
     const router  = useRouter()
     const store = useStore()
@@ -128,39 +143,63 @@ export default {
     const showAddressChoice = () => {
       state.isShowAddressChoice = true
     }
-    //购买项目
+    //computed购买项目
     const buyItems = computed(()=>{
       if(store.getters.buyItems){
         return store.getters.buyItems
       }else{
-        return JSON.parse(localStorage.getItem('_buy_items'))
+        return Session.getStore('_buy_items')
       }
     })
     //商品总价
     const totalPrice = computed(() => {
       let total = 0;
-      buyItems._value.forEach((item)=>{
-        total += item.amount*item.product_sku.price
-      })
-      return total
+      if(buyItem._value){
+        total = buyItem._value.amount * buyItem._value.product_sku.price
+        return total
+      }
+      if(Array.isArray(buyItems._value)&&buyItems._value.length>0){
+        buyItems._value.forEach((item)=>{
+          total += item.amount*item.product_sku.price
+        })
+        return total
+      }else{
+         return total = 0
+      }
     })
+    //总数量
     const totalAmount = computed(()=>{
-      let amount = 0;
+     let amount = 0;
+     if(buyItem._value){
+        amount = buyItem._value.amount
+        return amount
+     }
+     if(Array.isArray(buyItems._value)&&buyItems._value.length>0){
       buyItems._value.forEach((item)=>{
         amount += item.amount
       })
-
       return amount
+     }
+     
     }) 
+    //从sessionStorage获取收货地址收货地址
+	const address = computed(() => {
+		return JSON.parse(sessionStorage.getItem('_selected_address'))
+	})
+	//从sessionStorage 获取单个购买项目
+	const buyItem = computed(() => {
+		return Session.getStore('_buy_item')
+	})
     //提交订单
     const submitOrder = () => {
-      if(!state.address){
+      if(!address._value){
         state.isShowAddressChoice = true
         return;
       }
+	  let arr = []
       const data = {
-        address_id: state.address.id,
-        items: buyItems._value
+        address_id: address._value.id,
+        items: buyItems._value?buyItems._value : arr.push(buyItem._value)
       }
       Toast.loading('正在创建订单')
       FetchAPI.addOrder(data)
@@ -168,6 +207,7 @@ export default {
         if(res.status==200){
           localStorage.removeItem('_full_cart')
           localStorage.removeItem('_buy_items')
+		  sessionStorage.removeItem('_buy_item')
           localStorage.setItem(''+res.data[0].no,JSON.stringify({
             created_at: Date.now()
           }))
@@ -201,7 +241,9 @@ export default {
       getAddressFromChild,
       buyItems,
       totalPrice,
-      totalAmount
+      totalAmount,
+	    buyItem,
+	    address
     }
   }
 }

@@ -8,10 +8,10 @@ module.exports = {
    
     proxy: {
      
-      // '/api': {
-      //   target: 'http://efront.test/api',
-      //   changeOrgin: true
-      // },
+      '/api': {
+        target: 'http://.test/api',
+        changeOrgin: true
+      },
       '/v3': {
         target: 'https://restapi.amap.com',
         changeOrgin: true,
