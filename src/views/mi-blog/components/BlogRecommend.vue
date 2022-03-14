@@ -28,7 +28,7 @@
       </div>
       <!-- 评论 -->
       <div class="comment-content">
-        <p>很喜欢k40游戏这个带感的视频，有点意思，搅局小能手</p>
+        <p>很喜欢k40游戏这个带感的视频，吹爆</p>
       </div>
       <!-- 评论图片 -->
       <div class="comment-image">

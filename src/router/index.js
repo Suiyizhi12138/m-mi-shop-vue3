@@ -14,7 +14,7 @@ const routes = [
     redirect: '/home',
     component: () => import('@/views/HomePage'),
     meta: {
-      title: '小米官方网站'
+      title: '小米Demo'
     },
     children: [
       {

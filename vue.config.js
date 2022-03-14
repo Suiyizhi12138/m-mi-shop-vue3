@@ -9,7 +9,7 @@ module.exports = {
     proxy: {
      
       '/api': {
-        target: 'http://.test/api',
+        target: 'http://mi-shop.test/api',
         changeOrgin: true
       },
       '/v3': {

@@ -56,13 +56,16 @@ export default createStore({
     },
     //获取用户信息
     getUserInfo({commit}){
-      FetchAPI.getUserInfo()
+      if(localStorage.getItem('_user_token')){
+        FetchAPI.getUserInfo()
       .then((res)=>{
         commit('setUserInfo',res.data)
       })
       .catch((e)=>{
         console.log(e)
       })
+      }
+      
     },
     //获取地区信息
     keepSelectedDistrict({commit},district){

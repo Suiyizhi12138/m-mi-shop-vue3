@@ -150,7 +150,8 @@ export default {
           store.dispatch('checkUserLoginStatus')
           axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('_user_token');
           Toast.clear()
-          window.location.href = Config.DOMAIN+'/#/user'
+          // window.location.href = Config.DOMAIN+'/#/user'
+          router.go(-1)
         })
         .catch((e) => {
           state.loginStatus = 3;

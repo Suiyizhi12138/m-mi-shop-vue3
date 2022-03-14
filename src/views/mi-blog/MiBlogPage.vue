@@ -43,7 +43,7 @@ export default {
   },
   setup(){
     const state = reactive({
-      activeIndex: 1    
+      activeIndex: 2    
     })
     const switchComponent = (index) => {
       state.activeIndex = index;

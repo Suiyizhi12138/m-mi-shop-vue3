@@ -138,13 +138,13 @@ export default {
       state.checkedTotalPrice = totalPrice;
     };
     //删除购物车项目
-    const deleteItem = id => {
+    const deleteItem = (id) => {
       FetchAPI.deleteCartItem(id).then(res => {
         if (res.status == 200) {
           FetchAPI.getCartItems().then(res => {
             localStorage.setItem("_full_cart", JSON.stringify(res.data));
             Toast.clear();
-            window.location.reload();
+            window.location.reload()
           });
         }
       });

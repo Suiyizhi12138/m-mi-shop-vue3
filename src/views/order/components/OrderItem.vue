@@ -30,7 +30,9 @@
       <div class="footer-bottom">
         <div class="btn-box flex-start">
           <a href="javascript:" class="btn-footer btn-delete" @click="deleteOrder(order.no)">取消订单</a>
-          <router-link :to="'/pay_order/'+order.no" class="btn-footer btn-submit">立即付款</router-link>
+          <router-link :to="'/pay_order/'+order.no" class="btn-footer btn-submit" v-if="!isPaid">立即付款</router-link>
+          <a href="javascript:" class="btn-footer btn-submit" v-else @click="completeOrder(order.no)">确认收货
+          </a>
         </div>
       </div>
     </div>
@@ -45,9 +47,13 @@ export default {
     order: {
       type: Object,
       required: true
+    },
+    isPaid: {
+      type: Boolean,//是否已经支付
+      required: true
     }
   },
-  setup(props) {
+  setup(props,{emit}) {
     const paidInfo = computed(() => {
       if (props.order.paid_at) {
         return "等待收货";
@@ -55,19 +61,38 @@ export default {
         return "等待付款";
       }
     });
-    const deleteOrder = no => {
-      Toast.loading("删除中");
+    const deleteOrder = (no) => {
+      Toast.loading("取消中");
+      
       FetchAPI.deleteOrder(no).then(res => {
         if (res.status == 200) {
+          emit('deleteItem',no);
           Toast.clear();
-          window.location.reload();
         }
+      })
+      .catch((e)=>{
+        console.log(e)
+        Toast.fail('取消失败')
       });
     };
 
+    const completeOrder = (no) => {
+      Toast.loading("确认中");
+      FetchAPI.deleteOrder(no).then(res => {
+        if (res.status == 200) {
+          Toast.clear();
+          emit('',no)
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+      });
+    }
+
     return {
       paidInfo,
-      deleteOrder
+      deleteOrder,
+      completeOrder
     };
   }
 };

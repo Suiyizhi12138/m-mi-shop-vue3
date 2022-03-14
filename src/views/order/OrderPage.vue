@@ -3,11 +3,7 @@
     <common-header :title="'我的订单'"></common-header>
     <nav class="order-header">
       <ul class="nav-list flex-start">
-        <li class="nav-item">
-          <a href="javascript:" class="btn-nav" :class="{'btn-nav-active': showIndex==0}" @click="showList(0)">
-            全部
-          </a>
-        </li>
+        
         <li class="nav-item">
           <a href="javascript:" class="btn-nav" :class="{'btn-nav-active': showIndex==1}" @click="showList(1)">
             待付款
@@ -21,37 +17,39 @@
       </ul>
     </nav>
     <!-- 全部订单 -->
-    <transition name="slide-right">
-      <div class="order-list-container" v-if="showIndex
+     <!-- <transition name="slide-right"> -->
+      <!-- <div class="order-list-container" v-if="showIndex
       ==0">
-        <!-- <order-list :orders="all_orders" :isAll="true"></order-list> -->
         <ul class="order-list">
           <li v-for="itemOrder in all_orders" :key="itemOrder.id">
-            <order-item :order="itemOrder"></order-item>
+            <order-item :order="itemOrder" :isPaid="Boolean(itemOrder.paid_at)" @deleteItem="handleDeleteItem" ></order-item>
           </li>
         </ul>
-      </div>
-    </transition>
+      </div>  -->
+    <!-- </transition> -->
     <!-- 待付订单 -->
     <transition name="slide-left">
       <div class="order-list-container" v-if="showIndex
       ==1">
-        <ul class="order-list">
+        <ul class="order-list" v-if="ready_orders.length>0">
           <li class="order-li" v-for="itemOrder in ready_orders" :key="itemOrder.id">
-            <order-item :order="itemOrder"></order-item>  
+            <order-item :order="itemOrder" :isPaid="Boolean(itemOrder.paid_at)" @deleteItem="handleDeleteItem"></order-item>  
           </li>
         </ul>
+        <div v-else class="order-none">当前没有待支付订单</div>
       </div>
+      
     </transition>
     <!-- 待收货订单 -->
     <transition name="slide-right">
       <div class="order-list-container" v-if="showIndex==2">
-        <ul class="order-list">
+        <ul class="order-list" v-if="paid_orders.length>0">
           <li class="order-li" v-for="itemOrder in paid_orders" :key="itemOrder.id">
-            <order-item :order="itemOrder"></order-item>
+            <order-item :order="itemOrder" :isPaid="Boolean(itemOrder.paid_at)" @deleteItem="handleDeleteItem"></order-item>
           </li>
         </ul>
-      </div>  
+        <div v-else class="order-none">当前没有待收货订单</div>
+      </div>
     </transition>
   </div>
 </template>
@@ -69,10 +67,11 @@ export default {
   },
   setup(){
     const state = reactive({
-      showIndex: 0,//显示列表下标
+      showIndex: 2,//显示列表下标
       all_orders: [],//订单列表
       paid_orders: [],//已经支付的订单
       ready_orders: [],//待付款订单
+      isPaid: false,//是否已支付
     })
     onMounted(()=>{
       getOrders()
@@ -80,22 +79,43 @@ export default {
     const showList = (index) => {
       state.showIndex = index
     }
+    //获取所有订单
     const getOrders = () => {
       FetchAPI.getOrders()
       .then((res)=>{
         state.all_orders = res.data
-        state.paid_orders = res.data.filter((item)=>{
+        state.paid_orders = state.all_orders.filter((item)=>{
           return Boolean(item.paid_at) == true
         })
-        state.ready_orders = res.data.filter((item)=>{
+        state.ready_orders = state.all_orders.filter((item)=>{
           return Boolean(item.paid_at) == false
         })
+      })
+    }
+
+    //删除单个项目
+    const handleDeleteItem = (no) => {
+      
+      state.paid_orders.forEach((item)=>{
+       
+        debugger
+        if(item.no==no){
+          state.paid_orders.splice(state.paid_orders.indexOf(item),1)
+        }
+      })
+      state.ready_orders.forEach((item)=>{
+        
+        debugger
+       if(item.no==no){
+          state.ready_orders.splice(state.paid_orders.indexOf(item),1)
+        }
       })
     }
     
     return {
       ...toRefs(state),
-      showList
+      showList,
+      handleDeleteItem
     }
   }
 }
@@ -206,6 +226,16 @@ export default {
             }
           }
         }
+      }
+      .order-none{
+        width: 375px;
+        height: 20px;
+        display: flex;
+        -webkit-box-flex: flex;
+        justify-content: center;
+        margin-top: 60px;
+        font-size: 14px;
+        color: #999;
       }
     }
 

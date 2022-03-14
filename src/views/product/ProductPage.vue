@@ -418,7 +418,7 @@
         window.scrollTo(0, tops[index]);
       };
       //获取节点offsetTop 顶部偏移量
-      const getElOffsetTop = className => {
+      const getElOffsetTop = (className) => {
         return document.querySelector(className).offsetTop;
       };
       //显示详情或参数
@@ -594,7 +594,7 @@
       const buyNow = () => {
         state.isShowTypePop = true
         state.clickSource = "buy"
-
+        
       }
 
       //点击确定按钮提交-选择类型 
@@ -606,7 +606,19 @@
             addToCart()
             break;
           case "buy":
-            Session.setStore("_buy_item",{
+            if(!localStorage.getItem('_user_token')){
+              Dialog.confirm({
+                message: "您还没有登录，是否前往登录"
+              })
+              .then((res)=>{
+                router.push("/user/login")
+              })
+              .catch((e)=>{
+                console.log("取消订单")
+              })
+             
+            }else{
+              Session.setStore("_buy_item",{
               name: state.zh_name,
               product_sku_id: state.product.skus[state.skuIndex].id,
               amount: state.buyCount,
@@ -616,6 +628,8 @@
             router.push({
               path: '/check_order'
             })
+            }
+            
             break;
 
         }

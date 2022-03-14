@@ -138,7 +138,7 @@ import { reactive,toRefs,computed } from 'vue'
 import {  useStore } from 'vuex'
 export default {
   created(){
-    //this.$store.dispatch('getUserInfo')
+   
     
   },
   setup(){
@@ -149,6 +149,9 @@ export default {
     const userInfo = computed(()=>{
       if(store.getters.userInfo){
         return store.getters.userInfo
+      }else{
+         store.dispatch('getUserInfo')
+         return store.getters.userInfo
       }
     })
     let isLogin = computed(()=>{
