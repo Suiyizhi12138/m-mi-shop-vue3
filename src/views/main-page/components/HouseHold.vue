@@ -87,7 +87,6 @@
 import FetchAPI from '@/utils/fetchApi'
 export default {
   props:{
-   
   },
   data(){
     return {

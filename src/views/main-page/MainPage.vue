@@ -23,104 +23,59 @@
           <a
             href="javascript:"
             class="nav-btn"
-            :class="{'nav-btn-active':active=='recommend-products'}"
-            @click="showComponent('recommend-products')"
+            :class="{'nav-btn-active':activeIndex==0}"
+            @click="showComponent(0)"
+           
           >推荐</a>
           <a
             href="javascript:"
             class="nav-btn"
-            :class="{'nav-btn-active':active=='intelligence-products'}"
-            @click="showComponent('intelligence-products')"
+            :class="{'nav-btn-active':activeIndex==1}"
+            @click="showComponent(1)"
           >智能</a>
           <a
             href="javascript:"
             class="nav-btn"
-            :class="{'nav-btn-active':active=='tv-products'}"
-            @click="showComponent('tv-products')"
+            :class="{'nav-btn-active':activeIndex==2}"
+            @click="showComponent(2)"
           >电视</a>
           <a
             href="javascript:"
             class="nav-btn"
-            :class="{'nav-btn-active':active=='house-hold'}"
-            @click="showComponent('house-hold')"
+            :class="{'nav-btn-active':activeIndex==3}"
+            @click="showComponent(3)"
           >家电</a>
           <a
             href="javascript:"
             class="nav-btn"
-            :class="{'nav-btn-active':active=='note-book'}"
-            @click="showComponent('note-book')"
+            :class="{'nav-btn-active':activeIndex==4}"
+            @click="showComponent(4)"
           >笔记本</a>
         </div>
         <div class="dropdown-btn">
           <i class="iconfont icon-arrow-down"></i>
-          <!-- <div class="dropdown-container">
-            <h3 class="content-title">
-              全部
-            </h3>
-            <div class="dropdown-content">
-              <ul class="dropdown-list">
-                <li class="dropdown-item">
-
-                </li>
-              </ul>
-            </div>
-          </div>-->
         </div>
       </div>
     </nav>
     <!-- 主页组件 -->
 
-    <transition name="slide-left">
-      <!-- <recommend-products v-if="isRecommned" key="recommend"></recommend-products>
-      <intelligence-products
-        v-else-if="isIntelligence"
-        key="intelligence"
-        :recommendHouseholds="getedRecommendHouseholds"
-      ></intelligence-products>
-      <tv-products v-else-if="isTvPage" key="tv" :recommendTvs="getedRcommendTvs"></tv-products>
-      <house-hold v-else-if="isHousehold" key="household" :recommendIceBoxs="getedRecommendIceBoxs"></house-hold>
-      <note-book v-else key="notebook" :recommendNotebooks="getedRecommendNotebooks"></note-book> -->
+    <transition :name="slideDirection">
       <keep-alive>
-      <component :is="active"></component>
+      <component :is="activeNames[activeIndex]"></component>
       </keep-alive>
       
     </transition>
-    <!-- <div v-show="!isLeft">
-      <transition-group name="slide-right" mode="out-in">
-        <recommend-products v-show="currentIndex==0" key="recommend" :recommendPhones="getedRecommendPhones"></recommend-products>
-        <intelligence-products v-show="currentIndex==1" key="intelligence"></intelligence-products>
-        <tv-products v-show="currentIndex==2" key="tv"></tv-products>
-      </transition-group>
-    </div>-->
-
-    <!-- <van-swipe
-      :show-indicators="false"
-      :touchable="false"
-      ref="swipe"
-      style="height:300px;width:375px"
-    >
-      <van-swipe-item>
-        <recommend-products></recommend-products>
-      </van-swipe-item>
-      <van-swipe-item>
-        <tv-products></tv-products>
-      </van-swipe-item>
-      <van-swipe-item>
-        <recommend-products></recommend-products>
-      </van-swipe-item>
-      <van-swipe-item>
-        <tv-products></tv-products>
-      </van-swipe-item>
-    </van-swipe>-->
+   
+     
   </div>
 </template>
 
 <script>
-import RecommendProducts from "./components/RecommendProducts";
-import TvProducts from "./components/TvProducts";
-import IntelligenceProducts from "./components/IntelligenceProducts";
-import NoteBook from "./components/NoteBook";
-import HouseHold from "./components/HouseHold";
+import RecommendProducts from './components/RecommendProducts'
+import TvProducts from './components/TvProducts'
+import IntelligenceProducts from './components/IntelligenceProducts'
+import HouseHold  from './components/HouseHold'
+import NoteBook from './components/NoteBook' 
 import { reactive, toRefs, onMounted } from "vue";
 import FetchAPI from "@/utils/fetchApi";
 
@@ -132,66 +87,38 @@ export default {
     HouseHold,
     NoteBook
   },
+  
   setup() {
-    // const this = reactive({
-    //   getedRecommendPhones: [],
-    //   getedRecommendHouseholds: [],
-    //   getedRcommendTvs: [],
-    //   getedRecommendIceBoxs: [],
-    //   getedRecommendNotebooks: []
-    // });
-    //onMounted(() => {
-    // FetchAPI.getAllTopCategories().then(res => {
-    //   this.getedRecommendPhones = res.data[0].products.slice(0, 8);
-    //   this.getedRecommendHouseholds = res.data[2].products.slice(0, 9);
-    // });
-    // FetchAPI.getAllCategories()
-    // .then(res=>{
-    //   //console.log(res.data)
-    //   this.getedRcommendTvs = res.data[2].products.slice(0,8);
-    //   let categoryIceBox = res.data.filter((item)=>{
-    //     return item.zh_name == '冰箱'
-    //   })
-    //   let categoryNotebook = res.data.filter((item)=>{
-    //     return item.zh_name == '笔记本'
-    //   })
+    const state = reactive({
+     activeName: 'recommend-products',//组件名
+     slideDirection: 'slide-left',//transition name
+     activeNames: ['recommend-products','intelligence-products','tv-products','house-hold','note-book'],
+     activeIndex: 0,//当前下标
+      
+    });
+    const showComponent = (index) => {
+      //state.activeIndex = index
+      let oldIndex = state.activeIndex
+      //判断当前下标与要点击的位置确定移动方向
+      if(index < oldIndex){
+        state.slideDirection = 'slide-left'
+      }else{
+        state.slideDirection = 'slide-right'
+      }
+      Promise.resolve()
+      .then(
+        state.activeIndex = index
+      )
 
-    //   this.getedRecommendIceBoxs = categoryIceBox[0].products
-    //   this.getedRecommendNotebooks =categoryNotebook[0].products
-    // })
-
-    //});
-    const state = reactive({});
-
-    return {
-      ...toRefs(state)
-    };
-  },
-  data() {
-    return {
-      active: 'recommend-products'
-    };
-  },
-  methods: {
-    // showComponent(index) {
-    //   //判定当前下标决定移动方向
-    //   // if (index < this.currentIndex) {
-    //   //   this.isLeft = false;
-    //   // } else {
-    //   //   this.isLeft = true;
-    //   // }
-    //   //异步加载动画
-    //   Promise.resolve().then(() => {
-    //     if (typeof index == "string" || typeof index == "number") {
-    //       this.currentIndex = index;
-
-    //     }
-    //   });
-    // }
-    showComponent(name) {
-      this.active = name
     }
-  }
+
+    return {
+      ...toRefs(state),
+      showComponent
+    };
+  },
+  
+ 
 };
 </script>
 
@@ -290,23 +217,23 @@ export default {
 
   .slide-left-enter-active,
   .slide-left-leave-active {
-    transition: all 0.5s ease;
+    transition: all .5s ease;
   }
   .slide-left-enter-from {
-    transform: translateX(375px);
+    transform: translateX(-375px);
   }
   .slide-left-leave-to {
-    transform: translateX(-375px);
+    transform: translateX(375px);
   }
   .slide-right-enter-active,
   .slide-right-leave-active {
     transition: all 0.5s ease;
   }
   .slide-right-enter-from {
-    transform: translateX(-375px);
+    transform: translateX(375px);
   }
   .slide-right-leave-to {
-    transform: translateX(375px);
+    transform: translateX(-375px);
   }
 }
 </style>

@@ -199,6 +199,8 @@
 
 import FetchAPI from "@/utils/fetchApi";
 export default {
+  props: {
+  },
   data() {
     return {
       recommendPhones: [],
@@ -233,6 +235,7 @@ div.recommend-page {
   position: absolute;
   top: 77px;
   left: 0;
+  
   .swipe-container {
     .van-swipe {
       width: 375px;

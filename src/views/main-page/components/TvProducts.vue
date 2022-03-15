@@ -192,9 +192,7 @@ export default {
       recommendTvs:[]
     }
   },
-  props: {
-    
-    
+  props: {  
   },
   mounted(){
     if(Array.isArray(this.recommendTvs)&&this.recommendTvs.length>0){

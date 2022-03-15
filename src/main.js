@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownItem, RadioGroup, Radio } from 'vant'
 import { Sticky } from 'vant'
 import { Image as VanImage } from 'vant'
 import axios from 'axios'
+import "animate.css"
 
 //动态设置title
 router.beforeEach((to, from, next) => {

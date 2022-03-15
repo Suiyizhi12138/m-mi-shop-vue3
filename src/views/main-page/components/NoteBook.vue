@@ -67,7 +67,7 @@
           <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/ed0de51cddbd973e1ac2e27ba05a0693.jpg?f=webp" alt="">
         </div>
         <ul class="nav-list">
-          <li class="nav-item" v-for="item in 6">
+          <li class="nav-item" v-for="item in 6" :key="item">
             <router-link to="/">
               <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/0d1ffaea355ab590ee88a48c9ab1ef0f.jpg?f=webp" alt="">
             </router-link>
