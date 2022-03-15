@@ -63,7 +63,6 @@
       <keep-alive>
       <component :is="activeNames[activeIndex]"></component>
       </keep-alive>
-      
     </transition>
    
      

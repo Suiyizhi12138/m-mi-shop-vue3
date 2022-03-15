@@ -8,10 +8,10 @@ module.exports = {
    
     proxy: {
      
-      '/api': {
-        target: 'http://mi-shop.test/api',
-        changeOrgin: true
-      },
+      // '/api': {
+      //   target: 'http://mi-shop.test/api',
+      //   changeOrgin: true
+      // },
       '/v3': {
         target: 'https://restapi.amap.com',
         changeOrgin: true,
